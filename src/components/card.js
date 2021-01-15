@@ -18,35 +18,33 @@ const Card = (article) => {
   //   </div>
   // </div>
   //
-  const cardDiv = document.createElement('div');
-  cardDiv.classList.add('card');
+  const card = document.createElement('div');
+  const headline = document.createElement('div');
+  const author = document.createElement('div');
+  const imgContainer = document.createElement('div');
+  const img = document.createElement('img');
+  const authorName = document.createElement('span');
 
-  const cardHeadline = document.createElement('div');
-  cardHeadline.textContent = `${article.headline}`
-  cardHeadline.classList.add('headline')
-  cardDiv.appendChild(cardHeadline)
+  card.classList.add("card")
+  headline.classList.add("headline");
+  author.classList.add("author");
+  imgContainer.classList.add("img-container");
 
-  const cardAuthor = document.createElement('div')
-  cardAuthor.classList.add('author')
-  cardDiv.appendChild(cardAuthor)
+  card.appendChild(headline);
+  card.appendChild(author);
+  author.appendChild(imgContainer);
+  author.appendChild(authorName);
+  imgContainer.appendChild(img);
 
-  const cardImgContainer = document.createElement('div')
-  cardImgContainer.classList.add('img-container')
-  cardDiv.appendChild(cardImgContainer)
+  headline.textContent=article.headline;
+  authorName.textContent = `By ${article.authorName}`;
+  img.setAttribute('src', `${article.authorPhoto}`);
 
-  const cardImg = document.createElement('img')
-  cardImg.src = `${article.authorPhoto}`
-  cardImgContainer.appendChild(cardImg)
-
-  const cardImgSpan = document.createElement('span')
-  cardImgSpan.textContent = `By ${article.authorName}`
-  cardImgContainer.appendChild(cardImg)
-
-  cardDiv.addEventListener('click', (event) => {
-    console.log(`${article.headline}`)
-  })
+  card.addEventListener('click', event => {
+    console.log(headline);
+  });
   
-  return cardDiv;
+  return card;
 }
 
 const cardAppender = (selector) => {
@@ -58,14 +56,27 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
-axios
-  .get("https://lambda-times-api.herokuapp.com/topics")
-  .then((response) => {
-    document.querySelector(selector).appendChild(Card(response.data.topics));
-  })
-  .catch((error) => {
-    console.log("something went wrong", error);
-  });
+  const myArr = [
+    "javascript",
+    "bootstrap",
+    "technology",
+    "jquery",
+    "node"
+];
+axios.get('https://lambda-times-api.herokuapp.com/articles')
+.then(success => {
+    console.log(success);
+    myArr.forEach(topic => {
+        success.data.articles[topic].forEach(el => {
+        const newDiv = Card(el);
+        document.querySelector(selector).appendChild(newDiv);
+    });
+    });
+})
+.catch(failure => {
+    console.log(failure);
+});
+
 }
 
 export { Card, cardAppender }

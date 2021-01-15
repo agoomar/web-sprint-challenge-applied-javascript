@@ -38,11 +38,11 @@ axios
   .get("https://lambda-times-api.herokuapp.com/topics")
   .then((response) => {
     document.querySelector(selector).appendChild(Tabs(response.data.topics));
+    console.log(document.querySelector(selector))
   })
   .catch((error) => {
     console.log("something went wrong", error);
   });
 }
-
 
 export { Tabs, tabsAppender }
